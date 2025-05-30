@@ -474,7 +474,7 @@ export default function BlogPostPage({ params }: PageProps) {
             <h3 className="text-lg font-semibold mb-4">Related Resources</h3>
             <div className="space-y-2">
               <Link
-                href="https://github.com"
+                href="https://github.com/JamesrPrince"
                 className="flex items-center text-sm text-muted-foreground hover:text-foreground"
               >
                 <Github className="mr-2 h-4 w-4" />
