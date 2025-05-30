@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 export function Hero() {
+
   return (
     <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Animated background gradients */}
@@ -23,10 +24,12 @@ export function Hero() {
               <div className="w-full h-full rounded-full bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center relative overflow-hidden">
                 <Image 
                   src="/placeholder-user.jpg" 
-                  alt="Prince Chisenga" 
+                  alt="Prince Chisenga - Full-Stack Developer and Data Analyst" 
                   width={152} 
                   height={152} 
                   className="rounded-full object-cover"
+                  priority
+                  quality={90}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-transparent to-blue-500/20 rounded-full"></div>
               </div>
@@ -64,9 +67,11 @@ export function Hero() {
               Get In Touch
             </Link>
           </Button>
-          <Button variant="outline" size="lg" className="border-2 border-purple-500/50 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
-            <Download className="mr-2 h-5 w-5" />
-            Download Resume
+          <Button variant="outline" size="lg" className="border-2 border-purple-500/50 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400 transition-all duration-300 transform hover:scale-105" asChild>
+            <Link href="/resume.pdf" download="Prince-Chisenga-Resume.pdf">
+              <Download className="mr-2 h-5 w-5" />
+              Download Resume
+            </Link>
           </Button>
         </div>
 

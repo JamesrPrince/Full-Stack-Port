@@ -1,16 +1,16 @@
 import { Hero } from "@/components/hero"
 import { About } from "@/components/about"
-import { Skills } from "@/components/skills"
-import { Projects } from "@/components/projects"
-import { Experience } from "@/components/experience"
-import { Contact } from "@/components/contact"
 import { Header } from "@/components/header"
-import { BlogPreview } from "@/components/blog-preview"
 import { Footer } from "@/components/footer"
+import { WebVitals } from "@/components/performance/web-vitals"
+import { DynamicSections } from "@/components/performance/dynamic-sections"
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-slate-950 relative overflow-hidden">
+      {/* Performance monitoring */}
+      <WebVitals />
+      
       {/* Animated background gradients */}
       <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
       <div className="fixed inset-0 bg-gradient-to-tr from-purple-950/20 via-transparent to-blue-950/20 animate-gradient"></div>
@@ -25,11 +25,7 @@ export default function Home() {
         <main className="space-y-0">
           <Hero />
           <About />
-          <Skills />
-          <Projects />
-          <Experience />
-          <BlogPreview />
-          <Contact />
+          <DynamicSections />
         </main>
         <Footer />
       </div>
