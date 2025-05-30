@@ -52,11 +52,10 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               {[
-                { href: "#about", label: "About" },
-                { href: "#skills", label: "Skills" },
-                { href: "#projects", label: "Projects" },
-                { href: "#experience", label: "Experience" },
-                { href: "#contact", label: "Contact" },
+                { href: "/", label: "Home" },
+                { href: "/about", label: "About" },
+                { href: "/projects", label: "Projects" },
+                { href: "/blog", label: "Blog" },
               ].map((link, index) => (
                 <li key={index}>
                   <Link

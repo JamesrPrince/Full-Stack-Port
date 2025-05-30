@@ -6,6 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 interface BlogPost {
   id: string
@@ -518,6 +519,7 @@ export default function BlogPostPage({ params }: PageProps) {
             </Button>
           </div>
         </article>
+        <Footer />
       </div>
     </div>
   )

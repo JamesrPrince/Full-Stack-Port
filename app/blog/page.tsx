@@ -5,6 +5,7 @@ import { CalendarDays, Clock, ArrowRight, BookOpen, Zap, Filter } from "lucide-r
 import Link from "next/link"
 import Image from "next/image"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 interface BlogPost {
   id: string
@@ -120,7 +121,7 @@ export default function BlogPage() {
         <Header />
 
         {/* Hero Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <section className="py-20 px-4 sm:px-6 lg:px-8 pt-32 relative overflow-hidden">
           {/* Background effects */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/20 to-transparent"></div>
           <div className="absolute top-10 left-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl"></div>
@@ -274,6 +275,7 @@ export default function BlogPage() {
             </div>
           </div>
         </section>
+        <Footer />
       </div>
     </div>
   )
