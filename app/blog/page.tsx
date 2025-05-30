@@ -6,106 +6,25 @@ import Link from "next/link"
 import Image from "next/image"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { getBlogPosts, blogCategories, type BlogPost } from "@/lib/blog"
 
-interface BlogPost {
-  id: string
-  title: string
-  excerpt: string
-  content: string
-  date: string
-  readTime: string
-  category: string
-  tags: string[]
-  image: string
-}
-
-// Sample blog posts data
-const blogPosts: BlogPost[] = [
-  {
-    id: "building-scalable-data-pipelines",
-    title: "Building Scalable Data Pipelines with Apache Kafka and Python",
-    excerpt:
-      "Learn how to design and implement robust data pipelines that can handle millions of events per day using Apache Kafka, Python, and modern cloud infrastructure.",
-    content: "",
-    date: "2024-01-15",
-    readTime: "8 min read",
-    category: "Data Engineering",
-    tags: ["Apache Kafka", "Python", "Data Engineering", "Microservices"],
-    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=300&fit=crop&auto=format",
-  },
-  {
-    id: "react-server-components-guide",
-    title: "A Complete Guide to React Server Components in Next.js 14",
-    excerpt:
-      "Dive deep into React Server Components and learn how they revolutionize the way we build modern web applications with improved performance and developer experience.",
-    content: "",
-    date: "2024-01-10",
-    readTime: "12 min read",
-    category: "Frontend Development",
-    tags: ["React", "Next.js", "Server Components", "Performance"],
-    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=300&fit=crop&auto=format",
-  },
-  {
-    id: "machine-learning-production",
-    title: "Deploying Machine Learning Models to Production: Best Practices",
-    excerpt:
-      "A comprehensive guide on taking your ML models from Jupyter notebooks to production-ready APIs with proper monitoring, versioning, and scalability considerations.",
-    content: "",
-    date: "2024-01-05",
-    readTime: "15 min read",
-    category: "Machine Learning",
-    tags: ["Machine Learning", "MLOps", "Python", "Docker", "API"],
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=300&fit=crop&auto=format",
-  },
-  {
-    id: "database-optimization-techniques",
-    title: "Advanced PostgreSQL Optimization Techniques for High-Traffic Applications",
-    excerpt:
-      "Explore advanced database optimization strategies including indexing, query optimization, connection pooling, and partitioning for PostgreSQL databases.",
-    content: "",
-    date: "2023-12-28",
-    readTime: "10 min read",
-    category: "Database",
-    tags: ["PostgreSQL", "Database", "Performance", "Optimization"],
-    image: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=600&h=300&fit=crop&auto=format",
-  },
-  {
-    id: "data-visualization-best-practices",
-    title: "Data Visualization Best Practices: From Raw Data to Actionable Insights",
-    excerpt:
-      "Learn how to create compelling and effective data visualizations that tell a story and drive business decisions using modern tools and design principles.",
-    content: "",
-    date: "2023-12-20",
-    readTime: "7 min read",
-    category: "Data Analysis",
-    tags: ["Data Visualization", "Tableau", "D3.js", "Analytics"],
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop&auto=format",
-  },
-  {
-    id: "microservices-architecture-patterns",
-    title: "Microservices Architecture Patterns: Lessons from Building at Scale",
-    excerpt:
-      "Real-world insights into microservices architecture patterns, including service discovery, API gateways, and distributed data management strategies.",
-    content: "",
-    date: "2023-12-15",
-    readTime: "11 min read",
-    category: "Backend Development",
-    tags: ["Microservices", "Architecture", "Node.js", "Docker", "Kubernetes"],
-    image: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=600&h=300&fit=crop&auto=format",
-  },
-]
-
-const categories = [
-  "All",
-  "Data Engineering",
-  "Frontend Development",
-  "Machine Learning",
-  "Database",
-  "Data Analysis",
-  "Backend Development",
-]
-
-export default function BlogPage() {
+export default async function BlogPage() {
+  const blogPosts = await getBlogPosts()
+  
+  // Add gradient colors for styling
+  const postsWithGradients = blogPosts.map((post, index) => {
+    const gradients = [
+      "from-emerald-500 to-teal-500",
+      "from-blue-500 to-cyan-500", 
+      "from-purple-500 to-pink-500",
+      "from-orange-500 to-red-500",
+      "from-indigo-500 to-purple-500"
+    ]
+    return {
+      ...post,
+      gradient: gradients[index % gradients.length]
+    }
+  })
   return (
     <div className="min-h-screen bg-slate-950 relative overflow-hidden">
       {/* Animated background gradients */}
@@ -154,7 +73,7 @@ export default function BlogPage() {
                 <h2 className="text-2xl font-semibold text-white">Filter by Category</h2>
               </div>
               <div className="flex flex-wrap gap-3 justify-center">
-                {categories.map((category, index) => (
+                {blogCategories.map((category, index) => (
                   <Badge
                     key={category}
                     variant="outline"
@@ -170,60 +89,62 @@ export default function BlogPage() {
             </div>
 
             {/* Featured Post */}
-            <div className="mb-16">
-              <h2 className="text-3xl font-bold mb-8 text-white text-center">Featured Post</h2>
-              <Card className="group overflow-hidden bg-slate-900/50 border-slate-700 hover:border-slate-600 transition-all duration-500 backdrop-blur-sm">
-                <div className="grid grid-cols-1 lg:grid-cols-2">
-                  <div className="relative h-64 lg:h-auto overflow-hidden">
-                    <Image
-                      src={blogPosts[0].image || "/placeholder.svg"}
-                      alt={blogPosts[0].title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 to-blue-500/20 opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
-                  </div>
-                  <div className="p-8">
-                    <div className="flex items-center gap-4 mb-4">
-                      <Badge className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-none">
-                        {blogPosts[0].category}
-                      </Badge>
-                      <div className="flex items-center text-sm text-slate-400">
-                        <CalendarDays className="mr-1 h-4 w-4" />
-                        {new Date(blogPosts[0].date).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center text-sm text-slate-400">
-                        <Clock className="mr-1 h-4 w-4" />
-                        {blogPosts[0].readTime}
-                      </div>
+            {postsWithGradients.length > 0 && (
+              <div className="mb-16">
+                <h2 className="text-3xl font-bold mb-8 text-white text-center">Featured Post</h2>
+                <Card className="group overflow-hidden bg-slate-900/50 border-slate-700 hover:border-slate-600 transition-all duration-500 backdrop-blur-sm">
+                  <div className="grid grid-cols-1 lg:grid-cols-2">
+                    <div className="relative h-64 lg:h-auto overflow-hidden">
+                      <Image
+                        src={postsWithGradients[0].image || "/placeholder.svg"}
+                        alt={postsWithGradients[0].title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className={`absolute inset-0 bg-gradient-to-t ${postsWithGradients[0].gradient} opacity-20 group-hover:opacity-30 transition-opacity duration-300`}></div>
                     </div>
-                    <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-blue-400 group-hover:bg-clip-text transition-all duration-300">
-                      {blogPosts[0].title}
-                    </h3>
-                    <p className="text-slate-300 mb-6 leading-relaxed">{blogPosts[0].excerpt}</p>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {blogPosts[0].tags.map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs bg-slate-800/80 border-slate-600 text-slate-300">
-                          {tag}
+                    <div className="p-8">
+                      <div className="flex items-center gap-4 mb-4">
+                        <Badge className={`bg-gradient-to-r ${postsWithGradients[0].gradient} text-white border-none`}>
+                          {postsWithGradients[0].category}
                         </Badge>
-                      ))}
+                        <div className="flex items-center text-sm text-slate-400">
+                          <CalendarDays className="mr-1 h-4 w-4" />
+                          {new Date(postsWithGradients[0].date).toLocaleDateString()}
+                        </div>
+                        <div className="flex items-center text-sm text-slate-400">
+                          <Clock className="mr-1 h-4 w-4" />
+                          {postsWithGradients[0].readTime}
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-blue-400 group-hover:bg-clip-text transition-all duration-300">
+                        {postsWithGradients[0].title}
+                      </h3>
+                      <p className="text-slate-300 mb-6 leading-relaxed">{postsWithGradients[0].excerpt}</p>
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {postsWithGradients[0].tags.map((tag) => (
+                          <Badge key={tag} variant="secondary" className="text-xs bg-slate-800/80 border-slate-600 text-slate-300">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                      <Button asChild className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <Link href={`/blog/${postsWithGradients[0].id}`}>
+                          Read More
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
                     </div>
-                    <Button asChild className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                      <Link href={`/blog/${blogPosts[0].id}`}>
-                        Read More
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
                   </div>
-                </div>
-              </Card>
-            </div>
+                </Card>
+              </div>
+            )}
 
             {/* Recent Posts */}
             <div>
               <h2 className="text-3xl font-bold mb-8 text-white text-center">Recent Posts</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {blogPosts.slice(1).map((post, index) => {
+                {postsWithGradients.slice(1).map((post, index) => {
                   const gradients = [
                     { gradient: "from-blue-500 to-cyan-500", bg: "from-blue-500/10 to-cyan-500/10" },
                     { gradient: "from-purple-500 to-pink-500", bg: "from-purple-500/10 to-pink-500/10" },
