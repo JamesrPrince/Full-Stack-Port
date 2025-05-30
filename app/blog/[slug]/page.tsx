@@ -5,6 +5,7 @@ import { CalendarDays, Clock, ArrowLeft, Share2, Github, ExternalLink } from "lu
 import Link from "next/link"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { Header } from "@/components/header"
 
 interface BlogPost {
   id: string
@@ -119,10 +120,10 @@ Building scalable data pipelines with Kafka and Python provides a robust foundat
     readTime: "8 min read",
     category: "Data Engineering",
     tags: ["Apache Kafka", "Python", "Data Engineering", "Microservices"],
-    image: "/placeholder.svg?height=400&width=800",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=400&fit=crop&auto=format",
     author: {
-      name: "Alex Chen",
-      avatar: "/placeholder.svg?height=40&width=40",
+      name: "Prince Chisenga",
+      avatar: "/placeholder-user.jpg",
     },
   },
   "react-server-components-guide": {
@@ -216,10 +217,10 @@ React Server Components in Next.js 14 provide a powerful way to build performant
     readTime: "12 min read",
     category: "Frontend Development",
     tags: ["React", "Next.js", "Server Components", "Performance"],
-    image: "/placeholder.svg?height=400&width=800",
+    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=400&fit=crop&auto=format",
     author: {
-      name: "Alex Chen",
-      avatar: "/placeholder.svg?height=40&width=40",
+      name: "Prince Chisenga",
+      avatar: "/placeholder-user.jpg",
     },
   },
   "machine-learning-production": {
@@ -372,10 +373,10 @@ Successful ML deployment requires careful planning and robust engineering practi
     readTime: "15 min read",
     category: "Machine Learning",
     tags: ["Machine Learning", "MLOps", "Python", "Docker", "API"],
-    image: "/placeholder.svg?height=400&width=800",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop&auto=format",
     author: {
-      name: "Alex Chen",
-      avatar: "/placeholder.svg?height=40&width=40",
+      name: "Prince Chisenga",
+      avatar: "/placeholder-user.jpg",
     },
   },
 }
@@ -394,116 +395,130 @@ export default function BlogPostPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header spacing */}
-      <div className="h-16"></div>
+    <div className="min-h-screen bg-slate-950 relative overflow-hidden">
+      {/* Animated background gradients */}
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+      <div className="fixed inset-0 bg-gradient-to-tr from-purple-950/20 via-transparent to-blue-950/20 animate-gradient"></div>
+    
+      {/* Floating background elements */}
+      <div className="fixed top-10 left-10 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-float"></div>
+      <div className="fixed bottom-10 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-float" style={{animationDelay: '3s'}}></div>
 
-      {/* Back to blog */}
-      <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
-        <Button variant="ghost" asChild className="mb-8">
-          <Link href="/blog">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Blog
-          </Link>
-        </Button>
-      </div>
+      <div className="relative z-10">
+        <Header />
 
-      {/* Hero Image */}
-      <div className="relative h-64 sm:h-80 lg:h-96 mb-8">
-        <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
+        {/* Back to blog */}
+        <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+          <Button variant="ghost" asChild className="mb-8 text-slate-300 hover:text-white hover:bg-slate-800">
+            <Link href="/blog">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Blog
+            </Link>
+          </Button>
+        </div>
 
-      {/* Article Content */}
-      <article className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pb-16">
-        {/* Article Header */}
-        <header className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <Badge>{post.category}</Badge>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <CalendarDays className="mr-1 h-4 w-4" />
-              {new Date(post.date).toLocaleDateString()}
+        {/* Hero Image */}
+        <div className="relative h-64 sm:h-80 lg:h-96 mb-8">
+          <Image src={post.image} alt={post.title} fill className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/40 to-transparent" />
+        </div>
+
+        {/* Article Content */}
+        <article className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+          {/* Article Header */}
+          <header className="mb-8">
+            <div className="flex items-center gap-4 mb-4">
+              <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white border-none">{post.category}</Badge>
+              <div className="flex items-center text-sm text-slate-400">
+                <CalendarDays className="mr-1 h-4 w-4" />
+                {new Date(post.date).toLocaleDateString()}
+              </div>
+              <div className="flex items-center text-sm text-slate-400">
+                <Clock className="mr-1 h-4 w-4" />
+                {post.readTime}
+              </div>
             </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Clock className="mr-1 h-4 w-4" />
-              {post.readTime}
-            </div>
-          </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">{post.title}</h1>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent">{post.title}</h1>
+            <p className="text-xl text-slate-300 mb-6 leading-relaxed">{post.excerpt}</p>
 
-          <p className="text-xl text-muted-foreground mb-6">{post.excerpt}</p>
-
-          {/* Author and Share */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            {/* Author Info */}
+            <div className="flex items-center gap-3 mb-6 p-4 rounded-lg bg-slate-900/50 border border-slate-700">
               <Image
-                src={post.author.avatar || "/placeholder.svg"}
+                src={post.author.avatar}
                 alt={post.author.name}
                 width={40}
                 height={40}
                 className="rounded-full"
               />
-              <span className="font-medium">{post.author.name}</span>
+              <div>
+                <p className="font-medium text-white">{post.author.name}</p>
+                <p className="text-sm text-slate-400">Full-Stack Developer & Data Analyst</p>
+              </div>
             </div>
 
-            <Button variant="outline" size="sm">
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {post.tags.map((tag, index) => (
+                <Badge key={tag} variant="secondary" className="bg-slate-800/80 border-slate-600 text-slate-300">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+
+            {/* Share Button */}
+            <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-purple-500">
               <Share2 className="mr-2 h-4 w-4" />
-              Share
+              Share Article
+            </Button>
+          </header>
+
+          {/* Article Body */}
+          <div className="prose prose-lg max-w-none mb-12 text-slate-300">
+            <div className="whitespace-pre-wrap leading-relaxed">{post.content}</div>
+          </div>
+
+          {/* Related Links */}
+          <Card className="mt-12 bg-slate-900/50 border-slate-700 backdrop-blur-sm">
+            <CardContent className="pt-6">
+              <h3 className="text-lg font-semibold mb-4 text-white">Related Resources</h3>
+              <div className="space-y-3">
+                <Link
+                  href="https://github.com/JamesrPrince"
+                  className="flex items-center text-sm text-slate-400 hover:text-purple-400 transition-colors group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-slate-800 group-hover:bg-purple-600 transition-colors mr-3 flex items-center justify-center">
+                    <Github className="h-4 w-4" />
+                  </div>
+                  View source code on GitHub
+                </Link>
+                <Link
+                  href="https://demo.com"
+                  className="flex items-center text-sm text-slate-400 hover:text-blue-400 transition-colors group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-slate-800 group-hover:bg-blue-600 transition-colors mr-3 flex items-center justify-center">
+                    <ExternalLink className="h-4 w-4" />
+                  </div>
+                  Live Demo
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Navigation */}
+          <div className="flex justify-between mt-12 pt-8 border-t border-slate-700">
+            <Button variant="outline" asChild className="border-slate-600 text-slate-300 hover:bg-slate-800">
+              <Link href="/blog">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                All Posts
+              </Link>
+            </Button>
+            <Button variant="outline" asChild className="border-slate-600 text-slate-300 hover:bg-slate-800">
+              <Link href="#contact">Get In Touch</Link>
             </Button>
           </div>
-        </header>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {post.tags.map((tag) => (
-            <Badge key={tag} variant="secondary">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-
-        {/* Article Content */}
-        <div className="prose prose-lg max-w-none">
-          <div className="whitespace-pre-wrap">{post.content}</div>
-        </div>
-
-        {/* Related Links */}
-        <Card className="mt-12">
-          <CardContent className="pt-6">
-            <h3 className="text-lg font-semibold mb-4">Related Resources</h3>
-            <div className="space-y-2">
-              <Link
-                href="https://github.com/JamesrPrince"
-                className="flex items-center text-sm text-muted-foreground hover:text-foreground"
-              >
-                <Github className="mr-2 h-4 w-4" />
-                View source code on GitHub
-              </Link>
-              <Link
-                href="https://demo.com"
-                className="flex items-center text-sm text-muted-foreground hover:text-foreground"
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Live demo
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Navigation */}
-        <div className="flex justify-between mt-12 pt-8 border-t">
-          <Button variant="outline" asChild>
-            <Link href="/blog">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              All Posts
-            </Link>
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href="#contact">Get In Touch</Link>
-          </Button>
-        </div>
-      </article>
+        </article>
+      </div>
     </div>
   )
 }
