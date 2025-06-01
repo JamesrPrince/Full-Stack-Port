@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
+import { defaultSEO, siteConfig, generateOGImageUrl } from '@/lib/seo/config'
+import { PersonStructuredData, WebsiteStructuredData, OrganizationStructuredData } from '@/components/seo/StructuredData'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -22,23 +24,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'Prince Chisenga - Full-Stack Developer & Data Analyst',
+    default: defaultSEO.title,
     template: '%s | Prince Chisenga'
   },
-  description: 'Portfolio of Prince Chisenga, a passionate full-stack developer and data analyst specializing in building scalable web applications and extracting meaningful insights from data.',
-  keywords: [
-    'Full-Stack Developer', 
-    'Data Analyst', 
-    'React', 
-    'Next.js', 
-    'Python', 
-    'Portfolio',
-    'Web Development',
-    'Data Science',
-    'Machine Learning',
-    'TypeScript'
-  ],
-  authors: [{ name: 'Prince Chisenga', url: 'https://github.com/JamesrPrince' }],
+  description: defaultSEO.description,
+  keywords: defaultSEO.keywords,
+  authors: [{ name: 'Prince Chisenga', url: siteConfig.social.github }],
   creator: 'Prince Chisenga',
   publisher: 'Prince Chisenga',
   formatDetection: {
@@ -60,31 +51,51 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://your-domain.vercel.app',
-    title: 'Prince Chisenga - Full-Stack Developer & Data Analyst',
-    description: 'Portfolio showcasing development and data science projects',
-    siteName: 'Prince Chisenga Portfolio',
+    url: process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://prince-chisenga.com',
+    title: defaultSEO.title,
+    description: defaultSEO.description,
+    siteName: siteConfig.name,
     images: [
       {
-        url: '/og-image.png',
+        url: generateOGImageUrl(),
         width: 1200,
         height: 630,
-        alt: 'Prince Chisenga - Full-Stack Developer & Data Analyst',
+        alt: defaultSEO.title,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Prince Chisenga - Full-Stack Developer & Data Analyst',
-    description: 'Portfolio showcasing development and data science projects',
-    images: ['/og-image.png'],
+    title: defaultSEO.title,
+    description: defaultSEO.description,
+    images: [generateOGImageUrl()],
+    creator: '@PrinceChisenga',
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: 'your-google-verification-code', // Update with actual verification code
   },
   alternates: {
-    canonical: 'https://your-domain.vercel.app',
+    canonical: process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : 'https://prince-chisenga.com',
   },
+  manifest: '/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/safari-pinned-tab.svg',
+        color: '#8b5cf6',
+      },
+    ],
+  },
+  category: 'technology',
 }
 
 export default function RootLayout({
@@ -98,10 +109,18 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://vercel-insights.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="preload" href="/placeholder-user.jpg" as="image" />
+        <link rel="preload" href="/images/hero-bg.jpg" as="image" />
         <meta name="google-site-verification" content="your-google-verification-code" />
+        <meta name="msvalidate.01" content="your-bing-verification-code" />
+        <meta name="yandex-verification" content="your-yandex-verification-code" />
       </head>
       <body className={`${inter.className} bg-slate-950 text-white font-sans antialiased`}>
+        <PersonStructuredData />
+        <WebsiteStructuredData />
+        <OrganizationStructuredData />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

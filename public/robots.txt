@@ -1,0 +1,52 @@
+User-agent: *
+Allow: /
+
+# Disallow private or sensitive areas
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+
+# Allow important static assets
+Allow: /api/og
+Allow: /images/
+Allow: /icons/
+Allow: /favicon.ico
+
+# Crawl delay (optional - be respectful to search engines)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://prince-chisenga.com/sitemap.xml
+Sitemap: https://prince-chisenga.com/sitemap-blog.xml
+Sitemap: https://prince-chisenga.com/sitemap-projects.xml
+
+# Additional directives for specific bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: LinkedInBot
+Allow: /
+Crawl-delay: 2
+
+# Block AI training bots (optional)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /

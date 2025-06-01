@@ -41,7 +41,7 @@ export function BlogClientWrapper({ initialPosts, categories }: BlogClientWrappe
           <BlogSearch 
             posts={initialPosts}
             categories={categories}
-            onFilteredPosts={handleFilteredPosts}
+            postsChangeAction={handleFilteredPosts}
           />
         </div>
 

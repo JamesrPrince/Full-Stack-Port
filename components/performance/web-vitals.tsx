@@ -10,6 +10,14 @@ interface Metric {
   rating: 'good' | 'needs-improvement' | 'poor'
 }
 
+// Extend Window interface to include analytics properties
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void
+    va?: (...args: any[]) => void
+  }
+}
+
 function sendToAnalytics(metric: Metric) {
   // Log to console in development
   if (process.env.NODE_ENV === 'development') {
@@ -66,7 +74,7 @@ export function usePerformanceMonitoring() {
             'Request': navEntry.responseStart - navEntry.requestStart,
             'Response': navEntry.responseEnd - navEntry.responseStart,
             'DOM Processing': navEntry.domComplete - navEntry.responseEnd,
-            'Total Load Time': navEntry.loadEventEnd - navEntry.navigationStart
+            'Total Load Time': navEntry.loadEventEnd - navEntry.fetchStart
           })
         }
       })

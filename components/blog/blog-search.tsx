@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -11,10 +11,10 @@ import { BlogPost } from "@/lib/blog"
 interface BlogSearchProps {
   posts: BlogPost[]
   categories: string[]
-  onFilteredPosts: (posts: BlogPost[]) => void
+  postsChangeAction: (posts: BlogPost[]) => void
 }
 
-export function BlogSearch({ posts, categories, onFilteredPosts }: BlogSearchProps) {
+export function BlogSearch({ posts, categories, postsChangeAction }: BlogSearchProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [selectedTags, setSelectedTags] = useState<string[]>([])
@@ -74,9 +74,9 @@ export function BlogSearch({ posts, categories, onFilteredPosts }: BlogSearchPro
   }, [posts, searchQuery, selectedCategory, selectedTags, sortBy])
 
   // Update parent component when filtered posts change
-  useMemo(() => {
-    onFilteredPosts(filteredPosts)
-  }, [filteredPosts, onFilteredPosts])
+  useEffect(() => {
+    postsChangeAction(filteredPosts)
+  }, [filteredPosts, postsChangeAction])
 
   const handleTagToggle = (tag: string) => {
     setSelectedTags(prev => 

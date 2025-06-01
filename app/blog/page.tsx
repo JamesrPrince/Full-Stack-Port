@@ -8,6 +8,66 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { getBlogPosts, blogCategories, type BlogPost } from "@/lib/blog"
 import { BlogClientWrapper } from "@/components/blog/blog-client-wrapper"
+import { generateCanonicalUrl, generateOGImageUrl, defaultSEO } from "@/lib/seo/config"
+import { WebsiteStructuredData, BreadcrumbStructuredData } from "@/components/seo/StructuredData"
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Technical Blog | Prince Chisenga',
+  description: 'Insights, tutorials, and thoughts on full-stack development, data analysis, and emerging technologies. Read articles about React, Next.js, Python, and more.',
+  keywords: [
+    'technical blog',
+    'full-stack development',
+    'data analysis',
+    'react tutorials',
+    'nextjs blog',
+    'python programming',
+    'web development',
+    'javascript',
+    'typescript',
+    'programming tutorials',
+    'software engineering',
+    'data science',
+    'machine learning',
+    'frontend development',
+    'backend development'
+  ],
+  alternates: {
+    canonical: generateCanonicalUrl('/blog'),
+  },
+  openGraph: {
+    title: 'Technical Blog | Prince Chisenga',
+    description: 'Insights, tutorials, and thoughts on full-stack development, data analysis, and emerging technologies.',
+    type: 'website',
+    url: generateCanonicalUrl('/blog'),
+    images: [
+      {
+        url: generateOGImageUrl('Technical Blog'),
+        width: 1200,
+        height: 630,
+        alt: 'Prince Chisenga Technical Blog',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Technical Blog | Prince Chisenga',
+    description: 'Insights, tutorials, and thoughts on full-stack development, data analysis, and emerging technologies.',
+    images: [generateOGImageUrl('Technical Blog')],
+    creator: '@PrinceChisenga',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+}
 
 export default async function BlogPage() {
   const blogPosts = await getBlogPosts()
@@ -29,6 +89,13 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen bg-slate-950 relative overflow-hidden">
+      {/* SEO Structured Data */}
+      <BreadcrumbStructuredData 
+        items={[
+          { name: 'Home', url: '/' },
+          { name: 'Blog', url: '/blog' }
+        ]} 
+      />
       {/* Animated background gradients */}
       <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
       <div className="fixed inset-0 bg-gradient-to-tr from-purple-950/20 via-transparent to-blue-950/20 animate-gradient"></div>
@@ -62,6 +129,19 @@ export default async function BlogPage() {
               <span className="text-blue-400 font-semibold"> data analysis</span>, and 
               <span className="text-emerald-400 font-semibold"> emerging technologies</span>
             </p>
+
+            {/* Category Tags for SEO */}
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {blogCategories.slice(1).map((category) => (
+                <Badge 
+                  key={category}
+                  variant="outline" 
+                  className="border-slate-600 text-slate-300 hover:bg-slate-800 transition-colors"
+                >
+                  {category}
+                </Badge>
+              ))}
+            </div>
 
             {/* Blog Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto">

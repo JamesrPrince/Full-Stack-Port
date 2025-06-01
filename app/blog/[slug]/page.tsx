@@ -14,10 +14,85 @@ import { CommentSection } from "@/components/blog/comment-section"
 import { TableOfContents } from "@/components/blog/table-of-contents"
 import { ShareButtons } from "@/components/blog/share-buttons"
 import { ScrollProgress } from "@/components/blog/scroll-progress"
+import { generateBlogPostSEO, generateCanonicalUrl, generateOGImageUrl } from "@/lib/seo/config"
+import { BlogPostStructuredData, BreadcrumbStructuredData } from "@/components/seo/StructuredData"
+import { Breadcrumbs, getBlogBreadcrumbs } from "@/components/seo/Breadcrumbs"
+import type { Metadata } from 'next'
 
 interface PageProps {
   params: {
     slug: string
+  }
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const post = await getBlogPost(params.slug)
+  
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+      description: 'The requested blog post could not be found.'
+    }
+  }
+
+  const seoConfig = generateBlogPostSEO(
+    post.title,
+    post.excerpt,
+    post.category,
+    post.tags,
+    post.date,
+    post.readTime
+  )
+
+  const canonicalUrl = generateCanonicalUrl(`/blog/${params.slug}`)
+  const ogImageUrl = generateOGImageUrl(post.title, 'blog')
+
+  return {
+    title: seoConfig.title,
+    description: seoConfig.description,
+    keywords: seoConfig.keywords,
+    authors: [{ name: seoConfig.author || 'Prince Chisenga' }],
+    category: post.category,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: 'article',
+      url: canonicalUrl,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+      publishedTime: post.date,
+      modifiedTime: post.date,
+      section: post.category,
+      tags: post.tags,
+      authors: ['Prince Chisenga'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [ogImageUrl],
+      creator: '@PrinceChisenga',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   }
 }
 
@@ -36,15 +111,23 @@ export default async function BlogPostPage({ params }: PageProps) {
     .filter(p => p.id !== post.id && p.category === post.category)
     .slice(0, 3)
 
-  // Generate breadcrumbs
-  const breadcrumbs = [
-    { label: "Home", href: "/" },
-    { label: "Blog", href: "/blog" },
-    { label: post.title, href: `#` }
-  ]
+  // Generate breadcrumbs for SEO
+  const breadcrumbItems = getBlogBreadcrumbs(post.title)
 
   return (
     <div className="min-h-screen bg-slate-950 relative overflow-hidden">
+      {/* SEO Structured Data */}
+      <BlogPostStructuredData
+        title={post.title}
+        excerpt={post.excerpt}
+        image={post.image}
+        publishedDate={post.date}
+        tags={post.tags}
+        category={post.category}
+        readingTime={post.readTime}
+        url={`/blog/${post.id}`}
+      />
+      
       <ScrollProgress />
       
       {/* Animated background gradients */}
@@ -58,22 +141,9 @@ export default async function BlogPostPage({ params }: PageProps) {
       <div className="relative z-10">
         <Header />
 
-        {/* Breadcrumbs */}
+        {/* SEO Breadcrumbs */}
         <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8">
-          <nav className="flex items-center space-x-2 text-sm text-slate-400 mb-4">
-            {breadcrumbs.map((item, index) => (
-              <div key={item.href} className="flex items-center">
-                {index > 0 && <ChevronRight className="h-4 w-4 mx-2" />}
-                {index === breadcrumbs.length - 1 ? (
-                  <span className="text-purple-400 font-medium line-clamp-1">{item.label}</span>
-                ) : (
-                  <Link href={item.href} className="hover:text-purple-400 transition-colors">
-                    {item.label}
-                  </Link>
-                )}
-              </div>
-            ))}
-          </nav>
+          <Breadcrumbs items={breadcrumbItems} />
 
           <Button variant="ghost" asChild className="mb-8 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-300">
             <Link href="/blog">
@@ -194,6 +264,17 @@ export default async function BlogPostPage({ params }: PageProps) {
                   <p className="text-xl text-slate-300 mb-8 leading-relaxed">
                     {post.excerpt}
                   </p>
+
+                  {/* Tags for SEO */}
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {post.tags.map((tag, index) => (
+                        <Badge key={index} variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Enhanced Author Info */}
                   <div className="flex items-center gap-4 mb-8 p-6 rounded-xl bg-gradient-to-r from-slate-900/50 to-slate-800/50 border border-slate-700 backdrop-blur-sm">

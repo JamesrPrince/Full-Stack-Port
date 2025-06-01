@@ -39,7 +39,7 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-function createTransporter() {
+async function createTransporter() {
   // Check if we have Gmail configuration
   if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
     return nodemailer.createTransport({
@@ -64,16 +64,9 @@ function createTransporter() {
     })
   }
 
-  // Fallback to ethereal for development/testing
-  console.log('Using Ethereal Email for testing - emails will be captured but not delivered')
-  return nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    auth: {
-      user: 'ethereal.user@ethereal.email',
-      pass: 'verysecret'
-    }
-  })
+  // For testing without email service - return null
+  console.log('No email service configured - will use console logging for testing')
+  return null
 }
 
 export async function POST(request: NextRequest) {
@@ -94,7 +87,24 @@ export async function POST(request: NextRequest) {
     const validatedData = contactSchema.parse(body)
 
     // Create email transporter
-    const transporter = createTransporter()
+    const transporter = await createTransporter()
+
+    // If no email service is configured, log the message for testing
+    if (!transporter) {
+      console.log('=== TEST EMAIL OUTPUT ===')
+      console.log(`From: ${validatedData.firstName} ${validatedData.lastName} (${validatedData.email})`)
+      console.log(`Subject: ${validatedData.subject}`)
+      console.log(`Message: ${validatedData.message}`)
+      console.log('========================')
+      
+      return NextResponse.json(
+        { 
+          message: 'Message received! (Email service not configured - check server logs)',
+          isTest: true
+        },
+        { status: 200 }
+      )
+    }
 
     const fromEmail = process.env.CONTACT_EMAIL_FROM || process.env.EMAIL_USER || 'noreply@example.com'
     const toEmail = process.env.CONTACT_EMAIL_TO || process.env.EMAIL_USER || 'admin@example.com'
@@ -178,10 +188,10 @@ export async function POST(request: NextRequest) {
       `
     }
 
-    // Send both emails
+    // Send both emails (transporter is guaranteed to be non-null at this point)
     const [selfEmail, replyEmail] = await Promise.all([
-      transporter.sendMail(mailToSelf),
-      transporter.sendMail(autoReply)
+      transporter!.sendMail(mailToSelf),
+      transporter!.sendMail(autoReply)
     ])
 
     // Log test email URLs if using Ethereal
