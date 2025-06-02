@@ -109,7 +109,7 @@ export function Contact() {
                   </div>
                   <div>
                     <p className="text-slate-400 text-sm">Phone</p>
-                    <p className="text-white">+1 (555) 123-4567</p>
+                    <p className="text-white">+260979002172</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4 group">
@@ -118,7 +118,7 @@ export function Contact() {
                   </div>
                   <div>
                     <p className="text-slate-400 text-sm">Location</p>
-                    <p className="text-white">San Francisco, CA</p>
+                    <p className="text-white">Lusaka, Zambia</p>
                   </div>
                 </div>
               </div>
